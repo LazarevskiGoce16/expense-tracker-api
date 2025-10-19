@@ -16,9 +16,9 @@ router.use(authenticateToken);
 
 router.post("/", createExpense);
 router.get("/", getAllExpenses);
+router.get("/summary", getExpenseSummary);
 router.get("/:id", getExpenseById);
 router.put("/:id", updateExpense);
 router.delete("/:id", deleteExpense);
-router.get("/sumarry", getExpenseSummary);
 
 export default router;

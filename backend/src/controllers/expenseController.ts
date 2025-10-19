@@ -15,7 +15,7 @@ export const createExpense = async (req: AuthenticatedRequest, res: Response) =>
         }
 
         const expense = await Expense.create({
-            userId: req.body.id,
+            userId: req.user.id,
             title,
             amount,
             category,
