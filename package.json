@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "sequelize": "^6.35.0",
+    "tedious": "^16.7.1"
+  }
+}

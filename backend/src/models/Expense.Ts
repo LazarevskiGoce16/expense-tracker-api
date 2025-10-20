@@ -1,5 +1,5 @@
-import { DataTypes, Model, Optional } from "sequelize";
-import sequelize from "../config/database";
+import { DataTypes, Model, Optional } from 'sequelize';
+import sequelize from '../config/database';
 
 interface ExpenseAttributes {
     id: number;
@@ -10,9 +10,13 @@ interface ExpenseAttributes {
     date: Date;
     createdAt?: Date;
     updatedAt?: Date;
-};
+}
 
-interface ExpenseCreationAttributes extends Optional<ExpenseAttributes, "id" | "createdAt" | "updatedAt"> {};
+interface ExpenseCreationAttributes extends Omit<ExpenseAttributes, "id" | "createdAt" | "updatedAt"> {
+    id?: number;
+    createdAt?: Date;
+    updatedAt?: Date;
+}
 
 class Expense extends Model<ExpenseAttributes, ExpenseCreationAttributes> implements ExpenseAttributes {
     public id!: number;
@@ -21,9 +25,9 @@ class Expense extends Model<ExpenseAttributes, ExpenseCreationAttributes> implem
     public amount!: number;
     public category!: string;
     public date!: Date;
-    public readonly createdAt?: Date;
-    public readonly updatedAt?: Date;
-};
+    public readonly createdAt!: Date;
+    public readonly updatedAt!: Date;
+}
 
 Expense.init(
     {
@@ -35,10 +39,6 @@ Expense.init(
         userId: {
             type: DataTypes.INTEGER,
             allowNull: false,
-            references: {
-                model: "users",
-                key: "id"
-            },
         },
         title: {
             type: DataTypes.STRING,
@@ -47,9 +47,6 @@ Expense.init(
         amount: {
             type: DataTypes.DECIMAL(10, 2),
             allowNull: false,
-            validate: {
-                min: 0.01,
-            },
         },
         category: {
             type: DataTypes.STRING,
@@ -57,13 +54,13 @@ Expense.init(
         },
         date: {
             type: DataTypes.DATEONLY,
-            allowNull: false
+            allowNull: false,
         },
     },
     {
         sequelize,
         tableName: "expenses",
-        timestamps: true
+        timestamps: true,
     }
 );
 

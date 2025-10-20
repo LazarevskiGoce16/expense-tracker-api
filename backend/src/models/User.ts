@@ -1,19 +1,21 @@
-import { DataTypes, Model, Optional } from "sequelize";
-import sequelize from "../config/database";
+import { DataTypes, Model, Optional } from 'sequelize';
+import sequelize from '../config/database';
 
 interface UserAttributes {
     id: number;
     email: string;
     password: string;
-};
+}
 
-interface UserCreationAttributes extends Optional<UserAttributes, "id"> {};
+interface UserCreationAttributes extends Omit<UserAttributes, "id"> {
+    id?: number;
+}
 
 class User extends Model<UserAttributes, UserCreationAttributes> implements UserAttributes {
     public id!: number;
     public email!: string;
     public password!: string;
-};
+}
 
 User.init(
     {
@@ -26,19 +28,16 @@ User.init(
             type: DataTypes.STRING,
             allowNull: false,
             unique: true,
-            validate: {
-                isEmail: true,
-            }
         },
         password: {
             type: DataTypes.STRING,
             allowNull: false,
-        }
+        },
     },
     {
         sequelize,
         tableName: "users",
-        timestamps: false
+        timestamps: false,
     }
 );
 
