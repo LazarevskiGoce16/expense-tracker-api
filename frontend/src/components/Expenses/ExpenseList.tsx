@@ -16,6 +16,7 @@ const ExpenseList:React.FC = () => {
         pagination,
         deleteExpense,
         updateFilters,
+        clearFilters,
         changePage,
         setError
     } = useExpenses();
@@ -60,7 +61,7 @@ const ExpenseList:React.FC = () => {
                 />
             )}
 
-            <ExpenseFilter onFilterChange={handleFilterChange} />
+            <ExpenseFilter onFilterChange={handleFilterChange} onClearFilters={clearFilters} />
 
             {expenses.length === 0 ? (
                 <div className="empty-state">

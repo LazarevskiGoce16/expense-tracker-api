@@ -30,7 +30,7 @@ export const createExpense = async (req: AuthenticatedRequest, res: Response) =>
 
 export const getAllExpenses = async (req: AuthenticatedRequest, res: Response) => {
     try {
-        const { category, from, to, page = "1", limit = "10" } = req.query;
+        const { category, from, to, search, page = "1", limit = "10" } = req.query;
         const userId = req.user.id;
 
         // From & to queries logic
@@ -38,6 +38,12 @@ export const getAllExpenses = async (req: AuthenticatedRequest, res: Response) =
 
         if (category) {
             whereConditions.category = category;
+        }
+
+        if (search) {
+            whereConditions.title = {
+                [Op.like]: `%${search}%`
+            };
         }
 
         if (from && to) {

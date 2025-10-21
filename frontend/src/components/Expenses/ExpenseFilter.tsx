@@ -5,9 +5,10 @@ import { capitalizeFirst } from "../../utils/formatters";
 
 interface ExpenseFilterProps {
     onFilterChange: (filters: FilterParams) => void;
+    onClearFilters: () => void;
 };
 
-const ExpenseFilter:React.FC<ExpenseFilterProps> = ({ onFilterChange }) => {
+const ExpenseFilter:React.FC<ExpenseFilterProps> = ({ onFilterChange, onClearFilters }) => {
     const [category, setCategory] = useState('');
     const [fromDate, setFromDate] = useState('');
     const [toDate, setToDate] = useState('');
@@ -31,7 +32,7 @@ const ExpenseFilter:React.FC<ExpenseFilterProps> = ({ onFilterChange }) => {
         setFromDate('');
         setToDate('');
         setSearch('');
-        onFilterChange({});
+        onClearFilters();
     };
 
     return (
