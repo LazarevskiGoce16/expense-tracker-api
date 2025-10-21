@@ -1,6 +1,7 @@
 import type React from "react";
 import { useAuth } from "../../context/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
+import "../../styles/layout.css";
 
 const Navbar: React.FC = () => {
     const { user, logout, isAuthenticated } = useAuth();
@@ -16,63 +17,29 @@ const Navbar: React.FC = () => {
     }
 
     return (
-        <nav style={{ 
-            backgroundColor: '#007bff', 
-            padding: '1rem 2rem', 
-            marginBottom: '2rem',
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center'
-        }}>
-            <div>
-                <Link 
-                    to="/expenses" 
-                    style={{ 
-                        color: 'white', 
-                        textDecoration: 'none', 
-                        fontSize: '1.5rem', 
-                        fontWeight: 'bold' 
-                    }}
-                >
-                    Expense Tracker
+        <nav className="navbar">
+            <div className="navbar-brand">
+                <Link to="/expenses" className="navbar-brand-link">
+                    💰 Expense Tracker
                 </Link>
             </div>
 
-            <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-                <Link 
-                    to="/expenses" 
-                    style={{ color: 'white', textDecoration: 'none', padding: '0.5rem 1rem' }}
-                >
+            <div className="navbar-menu">
+                <Link to="/expenses" className="navbar-link">
                     Expenses
                 </Link>
-                <Link 
-                    to="/expenses/new" 
-                    style={{ color: 'white', textDecoration: 'none', padding: '0.5rem 1rem' }}
-                >
+                <Link to="/expenses/new" className="navbar-link">
                     Add Expense
                 </Link>
-                <Link 
-                    to="/summary" 
-                    style={{ color: 'white', textDecoration: 'none', padding: '0.5rem 1rem' }}
-                >
+                <Link to="/summary" className="navbar-link">
                     Summary
                 </Link>
                 
-                <div style={{ color: 'white', marginLeft: '1rem' }}>
+                <div className="navbar-user">
                     Welcome, {user?.email}
                 </div>
                 
-                <button
-                    onClick={handleLogout}
-                    style={{
-                        backgroundColor: '#dc3545',
-                        color: 'white',
-                        border: 'none',
-                        padding: '0.5rem 1rem',
-                        borderRadius: '4px',
-                        cursor: 'pointer'
-                    }}
-                >
+                <button onClick={handleLogout} className="btn-danger">
                     Logout
                 </button>
             </div>

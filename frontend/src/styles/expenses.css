@@ -1,0 +1,270 @@
+/* Expense List Styles */
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.page-title {
+  margin: 0;
+  color: #333;
+  font-size: 2rem;
+}
+
+.btn-add-expense {
+  background-color: #28a745;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  text-decoration: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+  display: inline-block;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-add-expense:hover {
+  background-color: #218838;
+  text-decoration: none;
+  color: white;
+}
+
+.btn-add-expense:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(40, 167, 69, 0.25);
+}
+
+.empty-state {
+  text-align: center;
+  padding: 3rem 2rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  margin: 2rem 0;
+}
+
+.empty-state p {
+  color: #666;
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+.empty-state a {
+  color: #007bff;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.empty-state a:hover {
+  text-decoration: underline;
+}
+
+/* Table Styles */
+.table-container {
+  overflow-x: auto;
+  margin-bottom: 2rem;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.table th {
+  background-color: #f8f9fa;
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+  color: #333;
+  border-bottom: 2px solid #dee2e6;
+}
+
+.table td {
+  padding: 1rem;
+  border-bottom: 1px solid #dee2e6;
+  vertical-align: middle;
+}
+
+.table tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+.expense-title {
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 0.25rem;
+}
+
+.expense-meta {
+  font-size: 0.875rem;
+  color: #666;
+}
+
+.expense-amount {
+  font-weight: 600;
+  color: #28a745;
+  font-size: 1.1rem;
+}
+
+/* Category Badges */
+.category-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: white;
+}
+
+.category-food { background-color: #28a745; }
+.category-transport { background-color: #007bff; }
+.category-bills { background-color: #dc3545; }
+.category-entertainment { background-color: #ffc107; color: #333; }
+.category-shopping { background-color: #e83e8c; }
+.category-health { background-color: #20c997; }
+.category-other { background-color: #6c757d; }
+
+/* Action Buttons */
+.action-buttons {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.action-buttons .btn-sm {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 6px 12px !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  font-family: inherit !important;
+  border-radius: 4px !important;
+  cursor: pointer !important;
+  transition: background-color 0.3s ease !important;
+  text-decoration: none !important;
+  border: none !important;
+  box-sizing: border-box !important;
+  height: 32px !important;
+  line-height: 1 !important;
+  margin: 0 !important;
+  white-space: nowrap !important;
+}
+
+.action-buttons .btn-primary.btn-sm {
+  background-color: #007bff !important;
+  color: white !important;
+}
+
+.action-buttons .btn-primary.btn-sm:hover {
+  background-color: #0056b3 !important;
+  color: white !important;
+}
+
+.action-buttons .btn-danger.btn-sm {
+  background-color: #dc3545 !important;
+  color: white !important;
+  padding: 6px 16px !important;
+}
+
+.action-buttons .btn-danger.btn-sm:hover {
+  background-color: #c82333 !important;
+}
+
+/* Pagination */
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 2rem;
+}
+
+.pagination-btn {
+  padding: 0.5rem 1rem;
+  background-color: #f8f9fa;
+  color: #333;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.pagination-btn:hover {
+  background-color: #e9ecef;
+}
+
+.pagination-btn.active {
+  background-color: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .page-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .btn-add-expense {
+    text-align: center;
+  }
+  
+  .table {
+    font-size: 0.875rem;
+  }
+  
+  .action-buttons {
+    flex-direction: column;
+  }
+}
+
+/* Chart Toggle Buttons (for Summary page) */
+.chart-toggle {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.btn-toggle {
+  padding: 0.5rem 1rem;
+  background-color: #f8f9fa;
+  color: #333;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.btn-toggle:hover {
+  background-color: #e9ecef;
+  border-color: #bbb;
+}
+
+.btn-toggle.active {
+  background-color: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+
+.btn-toggle.active:hover {
+  background-color: #0056b3;
+  border-color: #0056b3;
+}
+
+/* Summary Page Styles */
+.total-amount {
+  color: #28a745;
+  font-weight: 600;
+}

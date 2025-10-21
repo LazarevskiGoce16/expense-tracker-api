@@ -6,6 +6,7 @@ import { capitalizeFirst, formatCurrency } from "../../utils/formatters";
 import { Bar, BarChart, CartesianGrid, Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import LoadingSpinner from "../Common/LoadingSpinner";
 import ErrorMessage from "../Common/ErrorMessage";
+import "../../styles/expenses.css";
 
 const Summary: React.FC = () => {
     const [summary, setSummary] = useState<ExpenseSummary | null>(null);
@@ -63,33 +64,19 @@ const Summary: React.FC = () => {
     }
 
     return (
-        <>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
-                <h1>Expense Summary</h1>
-                <div style={{ display: 'flex', gap: '0.5rem' }}>
+        <div className="page-container">
+            <div className="page-header">
+                <h1 className="page-title">Expense Summary</h1>
+                <div className="chart-toggle">
                     <button
                         onClick={() => setChartType('pie')}
-                        style={{
-                            backgroundColor: chartType === 'pie' ? '#007bff' : '#f8f9fa',
-                            color: chartType === 'pie' ? 'white' : '#000',
-                            border: '1px solid #ddd',
-                            padding: '0.5rem 1rem',
-                            borderRadius: '4px',
-                            cursor: 'pointer'
-                        }}
+                        className={`btn-toggle ${chartType === 'pie' ? 'active' : ''}`}
                     >
                         Pie Chart
                     </button>
                     <button
                         onClick={() => setChartType('bar')}
-                        style={{
-                            backgroundColor: chartType === 'bar' ? '#007bff' : '#f8f9fa',
-                            color: chartType === 'bar' ? 'white' : '#000',
-                            border: '1px solid #ddd',
-                            padding: '0.5rem 1rem',
-                            borderRadius: '4px',
-                            cursor: 'pointer'
-                        }}
+                        className={`btn-toggle ${chartType === 'bar' ? 'active' : ''}`}
                     >
                         Bar Chart
                     </button>
@@ -105,7 +92,7 @@ const Summary: React.FC = () => {
                 textAlign: 'center'
             }}>
                 <h2 style={{ margin: '0 0 0.5rem 0', color: '#007bff' }}>
-                    Total Expenses: {formatCurrency(summary.total)}
+                    Total Expenses: <span className="total-amount">{formatCurrency(summary.total)}</span>
                 </h2>
                 <p style={{ margin: 0, color: '#666' }}>
                     Across {Object.keys(summary.summary).length} categories
@@ -200,7 +187,7 @@ const Summary: React.FC = () => {
                     </tbody>
                 </table>
             </div>
-        </>
+        </div>
     );
 };
 

@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { validateEmail, validatePassword } from "../../utils/validation";
 import { authAPI } from "../../services/api";
+import "../../styles/auth.css";
 
 const Login: React.FC = () => {
     const [email, setEmail] = useState("");
@@ -41,62 +42,56 @@ const Login: React.FC = () => {
     };
 
     return (
-        <div style={{ maxWidth: '400px', margin: '2rem auto', padding: '2rem' }}>
-            <form onSubmit={handleSubmit}>
-                <h2>Login to Expense Tracker</h2>
+        <div className="auth-container">
+            <div className="auth-card">
+                <h2 className="auth-title">Login to Expense Tracker</h2>
 
                 {error && (
-                    <div style={{ color: 'red', marginBottom: '1rem', padding: '0.5rem', border: '1px solid red', borderRadius: '4px' }}>
+                    <div className="error-message">
                         {error}
                     </div>
                 )}
 
-                <div style={{ marginBottom: '1rem' }}>
-                    <label htmlFor="email" style={{ display: 'block', marginBottom: '0.5rem' }}>Email:</label>
-                    <input
-                        type="email"
-                        id="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
+                <form onSubmit={handleSubmit} className="auth-form">
+                    <div className="form-group">
+                        <label htmlFor="email">Email:</label>
+                        <input
+                            type="email"
+                            id="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            required
+                            disabled={loading}
+                            className="form-input"
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor="password">Password:</label>
+                        <input
+                            type="password"
+                            id="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
+                            disabled={loading}
+                            className="form-input"
+                        />
+                    </div>
+
+                    <button
+                        type="submit"
                         disabled={loading}
-                        style={{ width: '100%', padding: '0.5rem', border: '1px solid #ddd', borderRadius: '4px' }}
-                    />
-                </div>
+                        className="btn-primary"
+                    >
+                        {loading ? "Logging in..." : "Login"}
+                    </button>
 
-                <div style={{ marginBottom: '1rem' }}>
-                    <label htmlFor="password" style={{ display: 'block', marginBottom: '0.5rem' }}>Password:</label>
-                    <input
-                        type="password"
-                        id="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                        disabled={loading}
-                        style={{ width: '100%', padding: '0.5rem', border: '1px solid #ddd', borderRadius: '4px' }}
-                    />
-                </div>
-
-                <button
-                    type="submit"
-                    disabled={loading}
-                    style={{ 
-                        width: '100%', 
-                        padding: '0.75rem', 
-                        backgroundColor: loading ? '#ccc' : '#007bff', 
-                        color: 'white', 
-                        border: 'none', 
-                        borderRadius: '4px',
-                        cursor: loading ? 'not-allowed' : 'pointer'
-                    }}
-                >
-                    {loading ? "Logging in..." : "Login"}
-                </button>
-
-                <p style={{ textAlign: 'center', marginTop: '1rem' }}>
-                    Don't have an account? <Link to="/register">Register here</Link>
-                </p>
-            </form>
+                    <p className="auth-link">
+                        Don't have an account? <Link to="/register">Register here</Link>
+                    </p>
+                </form>
+            </div>
         </div>
     );
 };

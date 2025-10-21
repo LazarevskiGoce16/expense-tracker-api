@@ -7,6 +7,7 @@ import { expensesAPI } from "../../services/api";
 import { capitalizeFirst, formatDateForInput } from "../../utils/formatters";
 import LoadingSpinner from "../Common/LoadingSpinner";
 import ErrorMessage from "../Common/ErrorMessage";
+import "../../styles/forms.css";
 
 const ExpenseForm: React.FC = () => {
     const [formData, setFormData] = useState<ExpenseRequest>({
@@ -102,168 +103,120 @@ const ExpenseForm: React.FC = () => {
     }
 
     return (
-        <div style={{ maxWidth: '600px', margin: '0 auto' }}>
-            <h2>{isEditing ? 'Edit Expense' : 'Add New Expense'}</h2>
+        <div className="form-container">
+            <div className="form-wrapper">
+                <h2 className="form-title">
+                    {isEditing ? 'Edit Expense' : 'Add New Expense'}
+                </h2>
 
-            {error && (
-                <ErrorMessage 
-                    message={error} 
-                    onRetry={() => setError('')}
-                    showRetry={false}
-                />
-            )}
-
-            <form onSubmit={handleSubmit}>
-                {/* Title */}
-                <div style={{ marginBottom: '1rem' }}>
-                    <label htmlFor="title" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>
-                        Title: *
-                    </label>
-                    <input
-                        type="text"
-                        id="title"
-                        name="title"
-                        value={formData.title}
-                        onChange={handleInputChange}
-                        placeholder="Enter expense title..."
-                        disabled={loading}
-                        style={{ 
-                            width: '100%', 
-                            padding: '0.75rem', 
-                            border: errors.title ? '1px solid red' : '1px solid #ddd', 
-                            borderRadius: '4px' 
-                        }}
+                {error && (
+                    <ErrorMessage 
+                        message={error} 
+                        onRetry={() => setError('')}
+                        showRetry={false}
                     />
-                    {errors.title && 
-                    <div style={{ color: 'red', fontSize: '0.875rem', marginTop: '0.25rem' }}>
-                        {errors.title}
+                )}
+
+                <form onSubmit={handleSubmit} className="form">
+                    {/* Title */}
+                    <div className="form-group">
+                        <label htmlFor="title">Title: *</label>
+                        <input
+                            type="text"
+                            id="title"
+                            name="title"
+                            value={formData.title}
+                            onChange={handleInputChange}
+                            placeholder="Enter expense title..."
+                            disabled={loading}
+                            className={`form-input ${errors.title ? 'error' : ''}`}
+                        />
+                        {errors.title && 
+                            <div className="error-text">{errors.title}</div>
+                        }
                     </div>
-                    }
-                </div>
 
-                {/* Amount */}
-                <div style={{ marginBottom: '1rem' }}>
-                    <label htmlFor="amount" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>
-                        Amount ($): *
-                    </label>
-                    <input
-                        type="number"
-                        id="amount"
-                        name="amount"
-                        value={formData.amount || ''}
-                        onChange={handleInputChange}
-                        step="0.01"
-                        min="0"
-                        placeholder="0.00"
-                        disabled={loading}
-                        style={{ 
-                            width: '100%', 
-                            padding: '0.75rem', 
-                            border: errors.amount ? '1px solid red' : '1px solid #ddd', 
-                            borderRadius: '4px' 
-                        }}
-                    />
-                    {errors.amount && 
-                    <div style={{ color: 'red', fontSize: '0.875rem', marginTop: '0.25rem' }}>
-                        {errors.amount}
+                    {/* Amount */}
+                    <div className="form-group">
+                        <label htmlFor="amount">Amount ($): *</label>
+                        <input
+                            type="number"
+                            id="amount"
+                            name="amount"
+                            value={formData.amount || ''}
+                            onChange={handleInputChange}
+                            step="0.01"
+                            min="0"
+                            placeholder="0.00"
+                            disabled={loading}
+                            className={`form-input ${errors.amount ? 'error' : ''}`}
+                        />
+                        {errors.amount && 
+                            <div className="error-text">{errors.amount}</div>
+                        }
                     </div>
-                    }
-                </div>
 
-                {/* Category */}
-                <div style={{ marginBottom: '1rem' }}>
-                    <label htmlFor="category" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>
-                        Category: *
-                    </label>
-                    <select
-                        id="category"
-                        name="category"
-                        value={formData.category}
-                        onChange={handleInputChange}
-                        disabled={loading}
-                        style={{ 
-                            width: '100%', 
-                            padding: '0.75rem', 
-                            border: errors.category ? '1px solid red' : '1px solid #ddd', 
-                            borderRadius: '4px' 
-                        }}
-                    >
-                        <option value="">Select a category...</option>
-                        {CATEGORIES.map((cat) => (
-                            <option key={cat} value={cat}>
-                                {capitalizeFirst(cat)}
-                            </option>
-                        ))}
-                    </select>
-                    {errors.category && 
-                    <div style={{ color: 'red', fontSize: '0.875rem', marginTop: '0.25rem' }}>
-                        {errors.category}
+                    {/* Category */}
+                    <div className="form-group">
+                        <label htmlFor="category">Category: *</label>
+                        <select
+                            id="category"
+                            name="category"
+                            value={formData.category}
+                            onChange={handleInputChange}
+                            disabled={loading}
+                            className={`form-input ${errors.category ? 'error' : ''}`}
+                        >
+                            <option value="">Select a category...</option>
+                            {CATEGORIES.map((cat) => (
+                                <option key={cat} value={cat}>
+                                    {capitalizeFirst(cat)}
+                                </option>
+                            ))}
+                        </select>
+                        {errors.category && 
+                            <div className="error-text">{errors.category}</div>
+                        }
                     </div>
-                    }
-                </div>
 
-                {/* Date */}
-                <div style={{ marginBottom: '2rem' }}>
-                    <label htmlFor="date" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>
-                        Date: *
-                    </label>
-                    <input
-                        type="date"
-                        id="date"
-                        name="date"
-                        value={formData.date}
-                        onChange={handleInputChange}
-                        disabled={loading}
-                        style={{ 
-                            width: '100%', 
-                            padding: '0.75rem', 
-                            border: errors.date ? '1px solid red' : '1px solid #ddd', 
-                            borderRadius: '4px' 
-                        }}
-                    />
-                    {errors.date && 
-                    <div style={{ color: 'red', fontSize: '0.875rem', marginTop: '0.25rem' }}>
-                        {errors.date}
+                    {/* Date */}
+                    <div className="form-group">
+                        <label htmlFor="date">Date: *</label>
+                        <input
+                            type="date"
+                            id="date"
+                            name="date"
+                            value={formData.date}
+                            onChange={handleInputChange}
+                            disabled={loading}
+                            className={`form-input ${errors.date ? 'error' : ''}`}
+                        />
+                        {errors.date && 
+                            <div className="error-text">{errors.date}</div>
+                        }
                     </div>
-                    }
-                </div>
 
-                {/* Submit and cancel buttons */}
-                <div style={{ display: 'flex', gap: '1rem' }}>
-                    <button
-                        type="submit"
-                        disabled={loading}
-                        style={{
-                            backgroundColor: loading ? '#ccc' : '#28a745',
-                            color: 'white',
-                            border: 'none',
-                            padding: '0.75rem 2rem',
-                            borderRadius: '4px',
-                            cursor: loading ? 'not-allowed' : 'pointer',
-                            flex: 1
-                        }}
-                    >
-                        {loading ? 'Saving...' : (isEditing ? 'Update Expense' : 'Add Expense')}
-                    </button>
+                    {/* Submit and cancel buttons */}
+                    <div className="form-actions">
+                        <button
+                            type="submit"
+                            disabled={loading}
+                            className="btn-success"
+                        >
+                            {loading ? 'Saving...' : (isEditing ? 'Update Expense' : 'Add Expense')}
+                        </button>
 
-                    <button
-                        type="button"
-                        onClick={handleCancel}
-                        disabled={loading}
-                        style={{
-                            backgroundColor: '#6c757d',
-                            color: 'white',
-                            border: 'none',
-                            padding: '0.75rem 2rem',
-                            borderRadius: '4px',
-                            cursor: 'pointer',
-                            flex: 1
-                        }}
-                    >
-                        Cancel
-                    </button>
-                </div>
-            </form>
+                        <button
+                            type="button"
+                            onClick={handleCancel}
+                            disabled={loading}
+                            className="btn-secondary"
+                        >
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
     );
 };

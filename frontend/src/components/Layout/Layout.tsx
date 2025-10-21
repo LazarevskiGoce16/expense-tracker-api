@@ -1,4 +1,5 @@
 import Navbar from "./Navbar";
+import "../../styles/layout.css";
 
 interface LayoutProps {
     children: React.ReactNode;
@@ -8,7 +9,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     return (
         <>
             <Navbar />
-            <main style={{ padding: '0 2rem', maxWidth: '1200px', margin: '0 auto' }}>
+            <main className="layout-main">
                 {children}
             </main>
         </>

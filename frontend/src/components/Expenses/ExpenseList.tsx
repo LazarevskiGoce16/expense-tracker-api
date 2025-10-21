@@ -6,6 +6,7 @@ import ExpenseItem from "./ExpenseItem";
 import { useExpenses } from "../../hooks/useExpenses";
 import LoadingSpinner from "../Common/LoadingSpinner";
 import ErrorMessage from "../Common/ErrorMessage";
+import "../../styles/expenses.css";
 
 const ExpenseList:React.FC = () => {
     const {
@@ -43,19 +44,10 @@ const ExpenseList:React.FC = () => {
     }
 
     return (
-        <>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
-                <h1>My Expenses</h1>
-                <Link 
-                    to="/expenses/new"
-                    style={{
-                        backgroundColor: '#28a745',
-                        color: 'white',
-                        padding: '0.75rem 1.5rem',
-                        textDecoration: 'none',
-                        borderRadius: '4px'
-                    }}
-                >
+        <div>
+            <div className="page-header">
+                <h1 className="page-title">My Expenses</h1>
+                <Link to="/expenses/new" className="btn-add-expense">
                     + Add New Expense
                 </Link>
             </div>
@@ -71,20 +63,20 @@ const ExpenseList:React.FC = () => {
             <ExpenseFilter onFilterChange={handleFilterChange} />
 
             {expenses.length === 0 ? (
-                <div style={{ textAlign: 'center', padding: '2rem' }}>
+                <div className="empty-state">
                     <p>No expenses found. <Link to="/expenses/new">Add your first expense!</Link></p>
                 </div>
             ) : (
                 <>
-                    <div style={{ overflowX: 'auto' }}>
-                        <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '2rem' }}>
+                    <div className="table-container">
+                        <table className="table">
                             <thead>
-                                <tr style={{ backgroundColor: '#f8f9fa' }}>
-                                    <th style={{ padding: '1rem', textAlign: 'left', border: '1px solid #ddd' }}>Title</th>
-                                    <th style={{ padding: '1rem', textAlign: 'left', border: '1px solid #ddd' }}>Amount</th>
-                                    <th style={{ padding: '1rem', textAlign: 'left', border: '1px solid #ddd' }}>Category</th>
-                                    <th style={{ padding: '1rem', textAlign: 'left', border: '1px solid #ddd' }}>Date</th>
-                                    <th style={{ padding: '1rem', textAlign: 'left', border: '1px solid #ddd' }}>Actions</th>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Amount</th>
+                                    <th>Category</th>
+                                    <th>Date</th>
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -101,19 +93,12 @@ const ExpenseList:React.FC = () => {
 
                     {/* Pagination logic */}
                     {pagination.totalPages > 1 && (
-                        <div style={{ display: 'flex', justifyContent: 'center', gap: '0.5rem' }}>
+                        <div className="pagination">
                             {Array.from({ length: pagination.totalPages }, (_, i) => i + 1).map((page) => (
                                 <button
                                     key={page}
                                     onClick={() => handlePageChange(page)}
-                                    style={{
-                                        padding: '0.5rem 1rem',
-                                        backgroundColor: page === pagination.currentPage ? '#007bff' : '#f8f9fa',
-                                        color: page === pagination.currentPage ? 'white' : '#000',
-                                        border: '1px solid #ddd',
-                                        borderRadius: '4px',
-                                        cursor: 'pointer'
-                                    }}
+                                    className={`pagination-btn ${page === pagination.currentPage ? 'active' : ''}`}
                                 >
                                     {page}
                                 </button>
@@ -122,7 +107,7 @@ const ExpenseList:React.FC = () => {
                     )}
                 </>
             )}
-        </>
+        </div>
     );
 };
 
