@@ -1,66 +1,45 @@
 import type React from "react";
-import { useEffect, useState } from "react";
-import { type Expense, type FilterParams } from "../../types";
-import { expensesAPI } from "../../services/api";
+import { type FilterParams } from "../../types";
 import { Link } from "react-router-dom";
 import ExpenseFilter from "./ExpenseFilter";
 import ExpenseItem from "./ExpenseItem";
+import { useExpenses } from "../../hooks/useExpenses";
+import LoadingSpinner from "../Common/LoadingSpinner";
+import ErrorMessage from "../Common/ErrorMessage";
 
 const ExpenseList:React.FC = () => {
-    const [expenses, setExpense] = useState<Expense[]>([]);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState("");
-    const [filters, setFilters] = useState<FilterParams>({
-        page: 1,
-        limit: 10
-    });
-    const [pagination, setPagination] = useState({
-        currentPage: 1,
-        totalPages: 1,
-        totalItems: 0,
-        itemsPerPage: 10
-    });
-
-    const fetchExpenses = async () => {
-        setLoading(true);
-        try {
-            const response = await expensesAPI.getAll(filters);
-            setExpense(response.expenses);
-            setPagination(response.pagination);
-        } catch (err: any) {
-            setError(err.response?.data?.message || 'Failed to fetch expenses');
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    useEffect(() => {
-        fetchExpenses();
-    }, [filters]);
+    const {
+        expenses,
+        loading,
+        error,
+        pagination,
+        deleteExpense,
+        updateFilters,
+        changePage,
+        setError
+    } = useExpenses();
 
     const handleDelete = async (id: number) => {
         if (!window.confirm('Are you sure you want to delete this expense?')) {
             return;
         }
 
-        try {
-           await expensesAPI.delete(id);
-           fetchExpenses();  // To refresh the list
-        } catch (err: any) {
-            setError(err.response?.data?.message || 'Failed to delete expense');
+        const result = await deleteExpense(id);
+        if (!result.success) {
+            console.error('Failed to delete expense:', result.error);
         }
     };
 
     const handleFilterChange = (newFilters: FilterParams) => {
-        setFilters({ ...filters, ...newFilters, page: 1 });
+        updateFilters(newFilters);
     };
 
     const handlePageChange = (page: number) => {
-        setFilters({ ...filters, page });
+        changePage(page);
     };
 
     if (loading) {
-        return <div style={{ textAlign: 'center', padding: '2rem' }}>Loading expenses...</div>;
+        return <LoadingSpinner message="Loading expenses..." />;
     }
 
     return (
@@ -82,9 +61,11 @@ const ExpenseList:React.FC = () => {
             </div>
 
             {error && (
-                <div style={{ color: 'red', marginBottom: '1rem', padding: '0.5rem', border: '1px solid red', borderRadius: '4px' }}>
-                    {error}
-                </div>
+                <ErrorMessage 
+                    message={error} 
+                    onRetry={() => setError('')}
+                    showRetry={false}
+                />
             )}
 
             <ExpenseFilter onFilterChange={handleFilterChange} />

@@ -5,6 +5,8 @@ import { validateExpenseForm, type ValidationErrors } from "../../utils/validati
 import { useNavigate, useParams } from "react-router-dom";
 import { expensesAPI } from "../../services/api";
 import { capitalizeFirst, formatDateForInput } from "../../utils/formatters";
+import LoadingSpinner from "../Common/LoadingSpinner";
+import ErrorMessage from "../Common/ErrorMessage";
 
 const ExpenseForm: React.FC = () => {
     const [formData, setFormData] = useState<ExpenseRequest>({
@@ -96,7 +98,7 @@ const ExpenseForm: React.FC = () => {
     };
 
     if (loading && isEditing) {
-        return <div style={{ textAlign: 'center', padding: '2rem' }}>Loading expense...</div>;
+        return <LoadingSpinner message="Loading expense..." />;
     }
 
     return (
@@ -104,9 +106,11 @@ const ExpenseForm: React.FC = () => {
             <h2>{isEditing ? 'Edit Expense' : 'Add New Expense'}</h2>
 
             {error && (
-                <div style={{ color: 'red', marginBottom: '1rem', padding: '0.5rem', border: '1px solid red', borderRadius: '4px' }}>
-                    {error}
-                </div>
+                <ErrorMessage 
+                    message={error} 
+                    onRetry={() => setError('')}
+                    showRetry={false}
+                />
             )}
 
             <form onSubmit={handleSubmit}>
