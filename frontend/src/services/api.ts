@@ -9,7 +9,8 @@ import type {
     FilterParams 
 } from '../types';
 
-const API_BASE_URL = "http://localhost:9000";
+// const API_BASE_URL = "http://localhost:9000"; // Local development
+const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000"; // Docker
 
 const api = axios.create({
     baseURL: API_BASE_URL,
