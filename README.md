@@ -7,6 +7,7 @@ A full-stack expense tracking application built with modern web technologies. Tr
 ![Node.js](https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white)
 ![Express.js](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white)
 ![SQL Server](https://img.shields.io/badge/Microsoft%20SQL%20Server-CC2927?style=for-the-badge&logo=microsoft%20sql%20server&logoColor=white)
+![SQLite](https://img.shields.io/badge/SQLite-07405E?style=for-the-badge&logo=sqlite&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
 
 ## 🌟 Features
@@ -51,7 +52,7 @@ A full-stack expense tracking application built with modern web technologies. Tr
 - **Express.js** - Web framework
 - **TypeScript** - Type safety
 - **Sequelize** - ORM for database operations
-- **Microsoft SQL Server Express** - Database
+- **SQLite** - Lightweight database (Docker) / **SQL Server Express** - Database (local dev)
 - **JWT** - Authentication tokens
 - **bcryptjs** - Password hashing
 - **CORS** - Cross-origin resource sharing
@@ -97,7 +98,6 @@ expense-tracker-api/
 │   ├── 📄 package.json
 │   ├── 📄 tsconfig.json
 │   ├── 📄 Dockerfile              # Production Docker image
-│   ├── 📄 Dockerfile.dev          # Development Docker image
 │   └── 📄 .env.docker             # Docker environment variables
 │
 ├── 📁 frontend/                    # React frontend application
@@ -145,15 +145,14 @@ expense-tracker-api/
 │   ├── 📄 package.json
 │   ├── 📄 vite.config.ts
 │   ├── 📄 Dockerfile              # Production Docker image
-│   ├── 📄 Dockerfile.dev          # Development Docker image
 │   ├── 📄 nginx.conf              # Nginx configuration
 │   └── 📄 .env.docker             # Docker environment variables
 │
 ├── 📁 docs/                       # Documentation
-├── 📄 docker-compose.yml          # Production Docker setup
-├── 📄 docker-compose.dev.yml      # Development Docker setup
+├── 📄 docker-compose.simple.yml   # Docker setup with SQLite
 ├── 📄 README.md                   # This file
-└── 📄 README.docker.md            # Docker setup guide
+├── 📄 README.docker.md            # Docker setup guide
+└── 📄 DATABASE_INSPECTION.md      # Database access guide
 ```
 
 ## 🛠️ Installation & Setup
@@ -161,7 +160,7 @@ expense-tracker-api/
 ### Prerequisites
 - **Node.js** (v18 or higher)
 - **npm** or **yarn**
-- **Microsoft SQL Server Express** (or Docker)
+- **Microsoft SQL Server Express** (for local development) or **Docker** (recommended)
 - **Git**
 
 ### Option 1: Traditional Setup
@@ -207,15 +206,11 @@ npm run dev
 git clone https://github.com/LazarevskiGoce16/expense-tracker-api.git
 cd expense-tracker-api
 
-# Run with Docker Compose
-docker-compose up --build
+# Run with Docker Compose (SQLite database)
+docker-compose -f docker-compose.simple.yml up --build
 ```
 
-#### Development Mode with Docker
-```bash
-# Run in development mode with hot reloading
-docker-compose -f docker-compose.dev.yml up --build
-```
+Access the application at: http://localhost
 
 For detailed Docker setup instructions, see [README.docker.md](./README.docker.md)
 
@@ -291,7 +286,7 @@ GET /expenses?search=coffee&category=food&from=2024-01-01&to=2024-12-31&page=1&l
 
 #### Backend (.env)
 ```env
-# Database Configuration
+# Database Configuration (Local Development - SQL Server)
 DB_HOST=localhost
 DB_PORT=1433
 DB_NAME=ExpenseTracker
@@ -299,6 +294,8 @@ DB_USER=sa
 DB_PASSWORD=your_password
 DB_ENCRYPT=false
 DB_TRUST_CERT=true
+
+# For Docker deployment, SQLite is used automatically
 
 # Server Configuration
 PORT=5000
@@ -313,8 +310,7 @@ FRONTEND_URL=http://localhost:3000
 
 #### Frontend
 - API URL is configured in `src/services/api.ts`
-- Default: `http://localhost:9000` (development)
-- For Docker: `http://localhost:5000`
+- Default: `http://localhost:5000` for both local and Docker development
 
 ## 🚦 Available Scripts
 
@@ -338,23 +334,20 @@ npm run lint        # Run ESLint
 ## 🐳 Docker Commands
 
 ```bash
-# Production build
-docker-compose up --build
-
-# Development build
-docker-compose -f docker-compose.dev.yml up --build
+# Production build (SQLite)
+docker-compose -f docker-compose.simple.yml up --build
 
 # Run in background
-docker-compose up -d
+docker-compose -f docker-compose.simple.yml up -d
 
 # Stop services
-docker-compose down
+docker-compose -f docker-compose.simple.yml down
 
 # View logs
-docker-compose logs [service-name]
+docker-compose -f docker-compose.simple.yml logs [service-name]
 
 # Rebuild specific service
-docker-compose build [service-name]
+docker-compose -f docker-compose.simple.yml build [service-name]
 ```
 
 ## 🧪 Testing
@@ -424,9 +417,10 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 If you have any questions or need help with the application:
 
 1. Check the [Docker Setup Guide](./README.docker.md) for containerization help
-2. Review the API documentation above
-3. Open an issue on GitHub
-4. Contact the author
+2. See [Database Inspection Guide](./DATABASE_INSPECTION.md) for database access
+3. Review the API documentation above
+4. Open an issue on GitHub
+5. Contact the author
 
 ---
 
