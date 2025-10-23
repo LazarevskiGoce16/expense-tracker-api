@@ -1,6 +1,6 @@
 # Docker Setup Guide
 
-This guide will help you run the Expense Tracker application using Docker.
+This guide will help you run the Expense Tracker application using Docker with SQLite.
 
 ## Prerequisites
 
@@ -9,71 +9,50 @@ This guide will help you run the Expense Tracker application using Docker.
 
 ## Quick Start
 
-### Production Build
+### Production Build (SQLite)
 
-To run the entire application in production mode:
+To run the entire application:
 
 ```bash
-docker-compose up --build
+docker-compose -f docker-compose.simple.yml up --build
 ```
 
 This will:
-- Start SQL Server Express database
-- Build and run the backend API on port 5000
+- Build and run the backend API with SQLite database on port 5000
 - Build and run the frontend on port 80
 
 Access the application at: http://localhost
 
-### Development Mode
+### Background Mode
 
-For development with hot reloading:
+To run in background:
 
 ```bash
-docker-compose -f docker-compose.dev.yml up --build
+docker-compose -f docker-compose.simple.yml up -d
 ```
-
-This will:
-- Start SQL Server Express database
-- Run backend in development mode on port 5000 (with nodemon)
-- Run frontend in development mode on port 3000 (with Vite dev server)
-
-Access the application at: http://localhost:3000
 
 ## Services
 
-### Database
-- **Image**: Microsoft SQL Server 2022 Express
-- **Port**: 1433
-- **Credentials**: 
-  - Username: `sa`
-  - Password: `ExpenseTracker123!`
-- **Database**: `ExpenseTracker`
-
 ### Backend API
 - **Port**: 5000
+- **Database**: SQLite (file-based, no separate container needed)
 - **Environment**: Node.js with Express
-- **Health Check**: http://localhost:5000/health (if endpoint exists)
+- **Data Storage**: Persistent SQLite file in `/app/data/database.sqlite`
 
 ### Frontend
-- **Port**: 80 (production) / 3000 (development)
+- **Port**: 80
 - **Environment**: React with Vite
-- **Built with**: Nginx (production)
+- **Server**: Nginx
 
 ## Environment Variables
 
 ### Backend (.env.docker)
 ```env
-DB_HOST=database
-DB_PORT=1433
-DB_NAME=ExpenseTracker
-DB_USER=sa
-DB_PASSWORD=ExpenseTracker123!
-DB_ENCRYPT=false
-DB_TRUST_CERT=true
+DB_DIALECT=sqlite
+DB_STORAGE=/app/data/database.sqlite
 PORT=5000
-NODE_ENV=development
+NODE_ENV=production
 JWT_SECRET=your-super-secret-jwt-key-here-change-in-production
-FRONTEND_URL=http://localhost
 ```
 
 ### Frontend (.env.docker)
@@ -85,94 +64,135 @@ VITE_API_URL=http://localhost:5000
 
 ### Build and start all services
 ```bash
-docker-compose up --build
+docker-compose -f docker-compose.simple.yml up --build
 ```
 
 ### Start services in background
 ```bash
-docker-compose up -d
+docker-compose -f docker-compose.simple.yml up -d
 ```
 
 ### Stop all services
 ```bash
-docker-compose down
+docker-compose -f docker-compose.simple.yml down
 ```
 
 ### View logs
 ```bash
 # All services
-docker-compose logs
+docker-compose -f docker-compose.simple.yml logs
 
 # Specific service
-docker-compose logs backend
-docker-compose logs frontend
-docker-compose logs database
+docker-compose -f docker-compose.simple.yml logs backend
+docker-compose -f docker-compose.simple.yml logs frontend
 ```
 
 ### Rebuild specific service
 ```bash
-docker-compose build backend
-docker-compose build frontend
+docker-compose -f docker-compose.simple.yml build backend
+docker-compose -f docker-compose.simple.yml build frontend
 ```
 
-### Access database directly
+### Access SQLite database
 ```bash
-docker exec -it expense-tracker-db /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P ExpenseTracker123!
+# Copy database file to inspect locally
+docker cp expense-tracker-backend:/app/data/database.sqlite ./database.sqlite
+
+# Check container logs
+docker logs expense-tracker-backend
+```
+
+## Database Management
+
+### Backup Database
+```bash
+# Create backup
+docker cp expense-tracker-backend:/app/data/database.sqlite ./backup-$(date +%Y%m%d).sqlite
+```
+
+### Restore Database
+```bash
+# Restore from backup
+docker cp ./backup-20241023.sqlite expense-tracker-backend:/app/data/database.sqlite
+```
+
+### Reset Database
+```bash
+# Stop containers and remove data volume
+docker-compose -f docker-compose.simple.yml down
+docker volume rm expense-tracker-api_sqlite_data
 ```
 
 ## Troubleshooting
 
-### Database Connection Issues
-If you see database connection errors:
-1. Wait for SQL Server to fully start (can take 1-2 minutes on first run)
-2. Check if the database container is running: `docker ps`
-3. Check database logs: `docker-compose logs database`
+### Container Startup Issues
+If containers fail to start:
+1. Check if ports are available: `docker ps`
+2. Check container logs: `docker logs expense-tracker-backend`
+3. Rebuild containers: `docker-compose -f docker-compose.simple.yml up --build`
 
 ### Port Conflicts
 If ports are already in use:
-- Backend (5000): Change the port mapping in docker-compose.yml
-- Frontend (80/3000): Change the port mapping in docker-compose.yml
-- Database (1433): Change the port mapping in docker-compose.yml
+- Backend (5000): Change the port mapping in docker-compose.simple.yml
+- Frontend (80): Change the port mapping in docker-compose.simple.yml
 
 ### Build Issues
 If builds fail:
 1. Clean Docker cache: `docker system prune -a`
-2. Remove volumes: `docker-compose down -v`
-3. Rebuild: `docker-compose up --build`
+2. Remove volumes: `docker-compose -f docker-compose.simple.yml down -v`
+3. Rebuild: `docker-compose -f docker-compose.simple.yml up --build`
 
-### Database Persistence
-Data is persisted in a Docker volume named `mssql_data`. To reset the database:
+### SQLite Permission Issues
+If you get database permission errors:
 ```bash
-docker-compose down -v
-docker volume rm expense-tracker-api_mssql_data
+# The container automatically creates proper permissions
+# If issues persist, rebuild the backend:
+docker-compose -f docker-compose.simple.yml build backend
+docker-compose -f docker-compose.simple.yml up
+```
+
+### Data Persistence
+Data is persisted in Docker volumes. To check volumes:
+```bash
+docker volume ls
 ```
 
 ## Production Deployment
 
 For production deployment:
-1. Change default passwords in docker-compose.yml
-2. Update JWT_SECRET with a secure random key
-3. Set NODE_ENV=production
-4. Consider using Docker secrets for sensitive data
-5. Set up proper SSL/TLS termination
-6. Configure proper backup strategies for the database
+1. Update JWT_SECRET with a secure random key
+2. Set NODE_ENV=production in backend .env.docker
+3. Consider using Docker secrets for sensitive data
+4. Set up proper SSL/TLS termination
+5. Configure proper backup strategies for the SQLite database
+6. Consider using a more robust database (PostgreSQL) for high-traffic applications
 
 ## File Structure
 
 ```
 expense-tracker-api/
-├── docker-compose.yml          # Production configuration
-├── docker-compose.dev.yml      # Development configuration
+├── docker-compose.simple.yml   # SQLite-based Docker configuration
 ├── backend/
 │   ├── Dockerfile              # Production backend image
-│   ├── Dockerfile.dev          # Development backend image
 │   ├── .dockerignore
 │   └── .env.docker             # Backend environment variables
 ├── frontend/
 │   ├── Dockerfile              # Production frontend image
-│   ├── Dockerfile.dev          # Development frontend image
 │   ├── .dockerignore
 │   ├── .env.docker             # Frontend environment variables
 │   └── nginx.conf              # Nginx configuration
-└── README.docker.md            # This file
+├── README.docker.md            # This file
+└── DATABASE_INSPECTION.md      # Database access guide
+```
+
+## Database Inspection
+
+For detailed database inspection methods, see `DATABASE_INSPECTION.md`.
+
+Quick database access:
+```bash
+# Copy database for local inspection
+docker cp expense-tracker-backend:/app/data/database.sqlite ./database.sqlite
+
+# Then open with DB Browser for SQLite or DBeaver
 ```
