@@ -159,7 +159,7 @@ export const getExpenseSummary = async (req: AuthenticatedRequest, res: Response
         const summary: { [key: string]: number } = {};
         let total = 0;
 
-        expenses.forEach(expense => {
+        expenses.forEach((expense: any) => {
             const category = expense.category;
             const amount = parseFloat(expense.amount.toString());
 
