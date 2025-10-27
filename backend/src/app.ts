@@ -16,9 +16,11 @@ const PORT = process.env.PORT || 9000;
 app.use(helmet());
 app.use(cors({
     origin: [
-        'http://localhost:3000',
-        'http://localhost:5173',
-        'http://localhost:5174',
+        "http://localhost",
+        "http://localhost:3000",
+        "http://localhost:5000",
+        "http://localhost:5173",
+        "http://localhost:5174",
     ],
     credentials: true
 }));
